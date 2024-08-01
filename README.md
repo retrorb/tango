@@ -1,3 +1,7 @@
+### Requirements
+1. Docker==27.0.3
+2. Helm==3.7.2
+
 ### Docker image
 
 To build the Docker image for the `web` folder, use the following command:

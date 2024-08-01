@@ -1,10 +1,9 @@
 services:
   app:
     container_name: backend
-    image: retrorb/backend:1.0
-    # build:
-    #   context: .
-    #   dockerfile: Dockerfile
+    build:
+      context: .
+      dockerfile: Dockerfile
     ports:
       - 5001:5001
     environment:
