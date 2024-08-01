@@ -1,2 +1,14 @@
-opencv-python-headless
-pandas
+opencv-python-headless==4.10.0.84
+pandas==2.2.2
+Flask==2.0.1
+Flask-SQLAlchemy==2.5.1
+PyMySQL==1.0.2
+Werkzeug==2.2.2
+cryptography==43.0.0
+SQLAlchemy==1.4.41
+MarkupSafe==2.1.5
+Jinja2==3.1.4
+click==8.1.7
+itsdangerous==2.2.0
+cffi==1.16.0
+pycparser==2.22
