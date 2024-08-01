@@ -1,0 +1,47 @@
+replicaCount:
+  frontend: 2
+  backend: 2
+
+image:
+  frontend: nginx:latest
+  backend: retrorb/backend:1.1
+  database: mysql:8.0
+#ARM64  database: arm64v8/mysql:8.0
+
+resources:
+  frontend:
+    requests:
+      memory: "64Mi"
+      cpu: "250m"
+    limits:
+      memory: "128Mi"
+      cpu: "500m"
+  backend:
+    requests:
+      memory: "128Mi"
+      cpu: "500m"
+    limits:
+      memory: "256Mi"
+      cpu: "1"
+  database:
+    requests:
+      memory: "256Mi"
+      cpu: "1"
+    limits:
+      memory: "512Mi"
+      cpu: "2"
+    storageSize: "1Gi"
+
+
+service:
+  type: LoadBalancer
+  port: 80
+  backendPort: 5001
+  dbPort: 3306
+
+secrets:
+  dbHost: ZGItc2VydmljZQ==      # "db-service" base64 encoded
+  dbName: bXlkYXN0YW5k          # "mydatabase" base64 encoded
+  dbRootPassword: cGFzc3dvcmQ=  # "password" base64 encoded
+  dbUser: YWRtaW4=              # "admin" base64 encoded
+  dbPassword: cGFzc3dvcmQ=      # "password" base64 encoded

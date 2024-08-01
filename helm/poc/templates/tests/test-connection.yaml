@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ include "poc.name" . }}-test-connection"
+  labels:
+    {{- include "poc.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": test
+spec:
+  containers:
+    - name: wget
+      image: busybox
+      command: ['sh', '-c', 'timeout 120 sh -c "until wget -q -O- http://{{ include "poc.name" . }}-frontend:{{ .Values.service.port }}/healthz | grep UP; do sleep 3; done"']
+  restartPolicy: Never

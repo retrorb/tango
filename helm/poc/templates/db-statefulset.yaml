@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "poc.name" . }}-database
+  labels:
+    {{- include "poc.labels" . | nindent 4 }}
+spec:
+  serviceName: "{{ include "poc.name" . }}-database"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: database
+  template:
+    metadata:
+      labels:
+        app: database
+    spec:
+      containers:
+      - name: mysql
+        image: {{ .Values.image.database }}
+        ports:
+        - containerPort: {{ .Values.service.dbPort }}
+        resources:
+          requests:
+            memory: {{ .Values.resources.database.requests.memory }}
+            cpu: {{ .Values.resources.database.requests.cpu }}
+          limits:
+            memory: {{ .Values.resources.database.limits.memory }}
+            cpu: {{ .Values.resources.database.limits.cpu }}
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: db-secret
+              key: dbRootPassword
+        - name: MYSQL_DATABASE
+          valueFrom:
+            secretKeyRef:
+              name: db-secret
+              key: dbName
+        - name: MYSQL_USER
+          valueFrom:
+            secretKeyRef:
+              name: db-secret
+              key: dbUser
+        - name: MYSQL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: db-secret
+              key: dbPassword
+        volumeMounts:
+        - name: mysql-persistent-storage
+          mountPath: /var/lib/mysql
+  volumeClaimTemplates:
+  - metadata:
+      name: mysql-persistent-storage
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: {{ .Values.resources.database.storageSize }}

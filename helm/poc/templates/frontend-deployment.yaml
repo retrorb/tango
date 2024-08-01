@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "poc.name" . }}-frontend
+  labels:
+    {{- include "poc.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount.frontend }}
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+      - name: frontend
+        image: {{ .Values.image.frontend }}
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            memory: {{ .Values.resources.frontend.requests.memory }}
+            cpu: {{ .Values.resources.frontend.requests.cpu }}
+          limits:
+            memory: {{ .Values.resources.frontend.limits.memory }}
+            cpu: {{ .Values.resources.frontend.limits.cpu }}
+        volumeMounts:
+        - name: nginx-config-volume
+          mountPath: /etc/nginx/conf.d/default.conf
+          subPath: default.conf
+      volumes:
+      - name: nginx-config-volume
+        configMap:
+          name: {{ include "poc.name" . }}-nginx-config
+          items:
+            - key: default.conf
+              path: default.conf

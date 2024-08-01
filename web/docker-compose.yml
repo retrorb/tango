@@ -1,0 +1,24 @@
+services:
+  app:
+    container_name: backend
+    image: retrorb/backend:1.0
+    # build:
+    #   context: .
+    #   dockerfile: Dockerfile
+    ports:
+      - 5001:5001
+    environment:
+      - MYSQL_HOST=db
+      - MYSQL_DATABASE=mydb
+      - MYSQL_USER=myuser
+      - MYSQL_PASSWORD=mypassword
+  db:
+    container_name: database
+    image: mysql:latest
+    environment:
+      - MYSQL_ROOT_PASSWORD=secret
+      - MYSQL_DATABASE=mydb
+      - MYSQL_USER=myuser
+      - MYSQL_PASSWORD=mypassword
+    ports:
+      - 3306:3306

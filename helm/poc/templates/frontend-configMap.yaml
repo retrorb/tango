@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "poc.name" . }}-nginx-config
+  labels:
+    {{- include "poc.labels" . | nindent 4 }}
+data:
+  default.conf: |
+    server {
+        listen 80;
+        server_name _;
+
+        location / {
+            proxy_pass http://{{ include "poc.name" . }}-backend:{{ .Values.service.backendPort }};
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+        }
+    }
